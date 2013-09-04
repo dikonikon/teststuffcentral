@@ -2,21 +2,14 @@
 TODO
 ====
 
-# simple web page
+# next:
 
-    - upload yaml
+## log aggregator
 
-    - sends request to deploy/undeploy tomcat
+1. log sender
+1. package server and client as cookbooks
+1. a better file tailer
+1. specific about <environment> and <node> elements
 
-    - shows checks status of deployment/undeployment
 
-# server
-
-1. stores yaml in workspace
-
-1. Receives deploy request over websocket
-    - RequestHandlerActor actor sends request to WorkActor to do deployment
-    - WorkActor calls juju
-    - When finished WorkActor sends message to RequestHandlerActor
-    - RequestHandlerActor sends message to web page over WebSocket
 

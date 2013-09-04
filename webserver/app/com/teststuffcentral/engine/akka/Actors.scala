@@ -14,6 +14,7 @@ import play.api.libs.iteratee.Concurrent.Channel
 import scala.xml._
 
 
+
 class RequestHandlerActor extends Actor {
   var channel: Channel[AnyRef] = null
   val system = ActorSystem("TestStuffCentralEngine")
@@ -37,8 +38,6 @@ class RequestHandlerActor extends Actor {
     case x => {
       Logger.debug(me + "received message, but don't know what to do with it: " + x)
       Logger.debug(me + "type of message is: " + x.getClass.toString)
-      val y: Elem = x.asInstanceOf[Elem]
-      Logger.debug(me + "child is: " + y.child)
     }
   }
 }
@@ -54,8 +53,67 @@ class VagrantRunner extends Actor {
     case <vagrantup>{path}</vagrantup> => {
       Logger.debug(me + "received request to run: " + path)
       status = "starting"
-      val ret = Process("ls").lines.fold("")((x, y) => x + ", " + y)
-      sender ! <result>{ret}</result>
+      val ret = Process("script/vagrantup.sh").lines.foreach(x => sender ! <result>{x}</result>)
+    }
+  }
+}
+
+class LoggerActor extends Actor {
+
+  import java.io.{File, Writer, FileWriter, PrintWriter, BufferedWriter}
+  import scala.xml.Node
+
+  private var outFile: File = null
+  private var out: Writer = null
+  private var channel: Channel[AnyRef] = null
+  private val me = "loggeractor: "
+  private var nodeId: String = null
+
+  def receive = {
+
+    case c: Channel[AnyRef] => {
+      Logger.debug(me + "received channel")
+      channel = c
+    }
+
+    case <start>{content @ _*}</start> => {
+        content match {
+          case List(a, b) => {
+            val environmentName = a.text
+            nodeId = b.text
+            val dir = new File("logstore" + File.separatorChar + environmentName)
+            if (!dir.exists) {
+              dir.mkdir()
+            }
+            outFile = new File(dir.getPath + File.separatorChar + nodeId)
+            if (!outFile.exists) {
+              outFile.createNewFile
+            }
+            out = new PrintWriter(new BufferedWriter(new FileWriter(outFile)))
+
+            channel.push("<started>" + nodeId + "</started>")
+          }
+          case _ => {
+            Logger.debug(me + "unable to parse: " + content)
+          }
+        }
+
+      }
+
+    case <stop></stop> => {
+      out.flush()
+      out.close()
+      channel.push("<stopped>" + nodeId + "</stopped>")
+    }
+
+    case <l>{content}</l> => {
+      out.write(content.text)
+      out.write("\n")
+    }
+
+    case x => {
+      Logger.debug(me + "received message, but don't know what to do with it: " + x)
+      Logger.debug(me + "type of message is: " + x.getClass.toString)
     }
   }
 }
