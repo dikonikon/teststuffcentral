@@ -69,51 +69,56 @@ class LoggerActor extends Actor {
   private val me = "loggeractor: "
   private var nodeId: String = null
 
-  def receive = {
+  def receive = expectChannel
 
+//    case <stop></stop> => {
+//      out.flush()
+//      out.close()
+//      channel.push("<stopped>" + nodeId + "</stopped>")
+//    }
+
+  def expectChannel: Receive = {
     case c: Channel[AnyRef] => {
       Logger.debug(me + "received channel")
+      context.become(expectStartMessage)
+      Logger.debug(me + "changed state to: " + expectStartMessage.getClass.toString)
       channel = c
     }
+    case x => Logger.debug(me + "not expecting message: " + x.toString + " state: " + expectChannel.getClass.toString)
+  }
 
+  def expectStartMessage: Receive = {
     case <start>{content @ _*}</start> => {
-        content match {
-          case List(a, b) => {
-            val environmentName = a.text
-            nodeId = b.text
-            val dir = new File("logstore" + File.separatorChar + environmentName)
-            if (!dir.exists) {
-              dir.mkdir()
-            }
-            outFile = new File(dir.getPath + File.separatorChar + nodeId)
-            if (!outFile.exists) {
-              outFile.createNewFile
-            }
-            out = new PrintWriter(new BufferedWriter(new FileWriter(outFile)))
-
-            channel.push("<started>" + nodeId + "</started>")
+      content match {
+        case List(a, b) => {
+          val environmentName = a.text
+          nodeId = b.text
+          val dir = new File("logstore" + File.separatorChar + environmentName)
+          if (!dir.exists) {
+            dir.mkdir()
           }
-          case _ => {
-            Logger.debug(me + "unable to parse: " + content)
+          outFile = new File(dir.getPath + File.separatorChar + nodeId)
+          if (!outFile.exists) {
+            outFile.createNewFile
           }
+          out = new PrintWriter(new BufferedWriter(new FileWriter(outFile)))
+          context.become(expectLogRecords)
+          channel.push("<started>" + nodeId + "</started>")
+          Logger.debug(me + "changed state to: " + expectLogRecords.getClass.toString)
         }
-
+        case x => Logger.debug(me + "not expecting message: " + x.toString + " state: " + expectStartMessage.getClass.toString)
       }
-
-    case <stop></stop> => {
-      out.flush()
-      out.close()
-      channel.push("<stopped>" + nodeId + "</stopped>")
     }
+  }
 
+  def expectLogRecords: Receive = {
     case <l>{content}</l> => {
+
+      Logger.debug(me + "logging: " + content)
       out.write(content.text)
       out.write("\n")
+      out.flush()
     }
-
-    case x => {
-      Logger.debug(me + "received message, but don't know what to do with it: " + x)
-      Logger.debug(me + "type of message is: " + x.getClass.toString)
-    }
+    case x => Logger.debug(me + "not expecting message: " + x.toString + " state: " + expectLogRecords.getClass.toString)
   }
 }

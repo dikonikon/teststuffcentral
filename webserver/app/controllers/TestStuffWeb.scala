@@ -12,7 +12,7 @@ import scala.xml.XML._
 object TestStuffWeb extends Controller {
 
   val system = ActorSystem("TestStuffCentralEngine")
-  val me = "web.session: "
+  val me = "teststuffweb: "
 
   def session = WebSocket.using[String] { request => {
       Logger.debug(me + "received WebSocket request")
