@@ -1,9 +1,0 @@
-
-log aggregation:
-	detect out of sequence messages and report an error
-sequential test execution in a distributed environment
-environment creation
-deployment of many types of property
-aggregation of test results -> one test script per environment?
-relation of test results to logs and other evidence
-
