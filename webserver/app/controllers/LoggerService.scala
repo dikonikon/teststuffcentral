@@ -9,7 +9,7 @@ import akka.actor.{ActorRef, Props, ActorSystem}
 import com.teststuffcentral.engine.akka.LoggerActor
 import scala.xml.XML._
 
-object TestStuffWeb extends Controller {
+object LoggerService extends Controller {
 
   val system = ActorSystem("TestStuffCentralEngine")
   val me = "teststuffweb: "
