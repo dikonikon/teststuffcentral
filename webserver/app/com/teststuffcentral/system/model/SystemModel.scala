@@ -4,9 +4,9 @@ package com.teststuffcentral.system.model
  * See: https://github.com/dikonikon
  * This is open source software provided under the license
  * at the root directory of the project
- * Date: 02/10/13
- * Time: 14:42
+ * Date: 07/10/13
+ * Time: 17:02
  */
-case class Component(name: String) {
-
+trait SystemModel {
+  def addComponentByName(name: String, c: Component)
 }

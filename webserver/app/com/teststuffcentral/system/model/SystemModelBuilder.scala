@@ -9,7 +9,13 @@ package com.teststuffcentral.system.model
  */
 trait SystemModelBuilder {
 
-  def component(c: Component)
+  val model = implicitly[SystemModel]
+
+  def configure()
+
+  def component(name: String) = {
+    model.addComponentByName(name, Component(name))
+  }
   def onMachine(m: Machine)
   def connectsTo(c: Component)
   def atAddress(a: Address)
