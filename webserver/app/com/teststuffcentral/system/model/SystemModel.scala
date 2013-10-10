@@ -9,4 +9,6 @@ package com.teststuffcentral.system.model
  */
 trait SystemModel {
   def addComponentByName(name: String, c: Component)
+  def addModuleByName(name: String, m: Module)
+  def addComponentToModule(c: Component, m: Module)
 }
