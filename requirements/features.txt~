@@ -1,0 +1,9 @@
+
+log aggregation:
+	send multiple log records
+sequential test execution in a distributed environment
+environment creation
+deployment of many types of property
+aggregation of test results -> one test script per environment?
+relation of test results to logs and other evidence
+
