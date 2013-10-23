@@ -122,3 +122,12 @@ class LoggerActor extends Actor {
     case x => Logger.debug(me + "not expecting message: " + x.toString + " state: " + expectLogRecords.getClass.toString)
   }
 }
+
+class StatusReceiverActor extends Actor {
+
+  def receive = expectStatusOrQuery
+
+  def expectStatusOrQuery = expectStatus orElse expectQuery orElse logError
+
+
+}
