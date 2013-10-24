@@ -14,5 +14,7 @@ If so have you felt the need for many test environments, and wished that it was 
 For example currently under development are components to:
 
 * maintain a simple state model, and update that state model as components of the system become ready (that might be application code or an underlying process that is required such as a database server)
+* trigger test runs based on events from that state model
+* extract and publish endpoint details into a local dns server to facilitate connectivity between client and server modules in the system
 * stream logs from many parts of the system to a central file system using websockets
 * package and archive test results and test evidence from multiple test runs
