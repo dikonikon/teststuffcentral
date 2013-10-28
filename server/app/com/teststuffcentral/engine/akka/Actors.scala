@@ -11,7 +11,8 @@ package com.teststuffcentral.engine.akka
 import akka.actor.{Props, ActorSystem, Actor}
 import play.api.Logger
 import play.api.libs.iteratee.Concurrent.Channel
-import com.teststuffcentral.
+import com.teststuffcentral.common.akka.UnexpectedMessageLogging
+import com.teststuffcentral.system.model.{ModuleStatusChangeEvent, SystemModel}
 
 
 
@@ -61,7 +62,6 @@ class VagrantRunner extends Actor {
 class LoggerActor extends Actor {
 
   import java.io.{File, Writer, FileWriter, PrintWriter, BufferedWriter}
-  import scala.xml.Node
 
   private var outFile: File = null
   private var out: Writer = null
@@ -123,11 +123,26 @@ class LoggerActor extends Actor {
   }
 }
 
-class StatusReceiverActor extends Actor {
+class SystemModelEventActor extends Actor with UnexpectedMessageLogging {
 
-  def receive = expectStatusOrQuery
+  val me = "statusreceiveractor: "
+  var model: SystemModel = null
 
-  def expectStatusOrQuery = expectStatus orElse expectQuery orElse logError
+  def receive = expectSystemModel
 
+  def expectSystemModel: Receive = {
+    case s: SystemModel => model = s; context.become(expectStatusOrQuery)
+  }
 
+  def expectStatusOrQuery = expectStatus orElse expectQuery orElse unexpected
+
+  def expectStatus: Receive = {
+    case ModuleStatusChangeEvent(name, newStatus, oldStatus) => {
+      model.setModuleStatus(name, newStatus)
+    }
+  }
+
+  def expectQuery: Receive = {
+    case x =>
+  }
 }

@@ -11,8 +11,8 @@ object ApplicationBuild extends Build {
     // Add your project dependencies here,
     jdbc,
     anorm,
-    "com.typesafe.akka" %% "akka-actor" % "2.1.0",
-	"common" %% "common" % "1.0-SNAPSHOT"
+    "com.typesafe.akka" %% "akka-actor" % "2.0.1",
+	  "com.teststuffcentral" %% "common" % "1.0-SNAPSHOT"
   )
 
 

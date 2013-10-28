@@ -7,6 +7,11 @@ package com.teststuffcentral.system.model
  * Date: 02/10/13
  * Time: 14:42
  */
-case class Machine() {
+case class Machine(name: String) {
 
+  private var targets = Map[String, Target]()
+
+  def +(target: Target): Unit = {
+    targets = targets + (target.name -> target)
+  }
 }

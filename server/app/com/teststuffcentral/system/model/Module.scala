@@ -7,6 +7,6 @@ package com.teststuffcentral.system.model
  * Date: 09/10/13
  * Time: 09:13
  */
-case class Module(name: String) {
+case class Module(val name: String, var status: ModuleStatus = ModuleStatus.Unknown) {
 
 }

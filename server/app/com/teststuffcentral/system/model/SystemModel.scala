@@ -8,7 +8,7 @@ package com.teststuffcentral.system.model
  * Time: 17:02
  */
 trait SystemModel {
+  def setModuleStatus(name: String, status: ModuleStatus)
   def addComponentByName(name: String, c: Component)
   def addModuleByName(name: String, m: Module)
-  def addComponentToModule(c: Component, m: Module)
 }
