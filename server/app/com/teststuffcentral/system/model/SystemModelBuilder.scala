@@ -1,5 +1,8 @@
 package com.teststuffcentral.system.model
 
+import akka.actor.{Actor, ActorSystem}
+import com.teststuffcentral.common.akka.UnexpectedMessageLogging
+
 /**
  * See: https://github.com/dikonikon
  * This is open source software provided under the license
@@ -7,17 +10,27 @@ package com.teststuffcentral.system.model
  * Date: 01/10/13
  * Time: 19:18
  */
-trait SystemModelBuilder {
 
-  val model = implicitly[SystemModel]
+/**
+ * A SystemModelBuilder builds up an Akka system from a stream of messages.
+ * A source of the messages could be a config file parser or DSL.
+ */
+trait SystemModelBuilder extends Actor with UnexpectedMessageLogging {
+  val modelName: String
+  var model: ActorSystem
 
-  def configure()
+  def receive = expectSystem
 
-  def component(name: String) = {
-    model.addComponentByName(name, Component(name))
-  }
-  def onMachine(m: Machine)
-  def connectsTo(c: Component)
-  def atAddress(a: Address)
-  def discoveredAt(s: AddressSource)
+  def expectSystem: Receive
+
+  def expectTarget: Receive
+
+  def expectModule: Receive
+
+  def expectEndOfTarget: Receive
+
+  def expectQuery: Receive
+
+  def expectEndOfSystem
+
 }

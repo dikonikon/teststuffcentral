@@ -1,5 +1,9 @@
 package com.teststuffcentral.system.model
 
+import akka.actor.Actor
+import akka.event.Logging
+import com.teststuffcentral.common.akka.UnexpectedMessageLogging
+
 /**
  * See: https://github.com/dikonikon
  * This is open source software provided under the license
@@ -7,8 +11,10 @@ package com.teststuffcentral.system.model
  * Date: 07/10/13
  * Time: 17:02
  */
-trait SystemModel {
-  def setModuleStatus(name: String, status: ModuleStatus)
-  def addComponentByName(name: String, c: Component)
-  def addModuleByName(name: String, m: Module)
+class SystemModel extends Actor with UnexpectedMessageLogging {
+
+  val log = Logging(context.system, this)
+
+  def receive =
+
 }

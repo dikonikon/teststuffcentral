@@ -9,16 +9,19 @@
 
 package com.teststuffcentral.common.akka
 
-import akka.actor.Actor._
-import play.api.Logger
+import akka.actor.Actor
+import akka.event.{LoggingAdapter}
 
 
 trait UnexpectedMessageLogging {
-  val me: String
+  self: Actor =>
+  val log: LoggingAdapter
   def unexpected: Receive = {
     case x => {
-      Logger.error(me + "received: " + x + " but don't know what to do with it")
-      Logger.error(me + "type of message received was: " + x.getClass.toString)
+      log.error("received: " + x + " but don't know what to do with it")
+      log.error("type of message received was: " + x.getClass.toString)
     }
   }
 }
+
+
