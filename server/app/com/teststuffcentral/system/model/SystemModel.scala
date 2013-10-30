@@ -15,6 +15,10 @@ class SystemModel extends Actor with UnexpectedMessageLogging {
 
   val log = Logging(context.system, this)
 
-  def receive =
+  def receive = something
+
+  def something: Receive = {
+    case x =>
+  }
 
 }
