@@ -20,6 +20,7 @@ trait UnexpectedMessageLogging {
     case x => {
       log.error("received: " + x + " but don't know what to do with it")
       log.error("type of message received was: " + x.getClass.toString)
+
     }
   }
 }

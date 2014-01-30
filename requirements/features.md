@@ -45,6 +45,6 @@ relation of test results to logs and other evidence
 1. When all test runners have reported completion the tsc-testhub-server copies all transmitted test data and results to an archive in the cloud specified by the user
 1. The tsc-testhub-server stops and destroys all of the VMs in the test-target and test-runner environments, then signals the tsc-orch-server
 1. tsc-orch-server stops and destroys the tsc-testhub-server
-1. finally tsc-orc-server signals the tsctool that the test is complete
+1. finally tsc-orc-server signals the tsctool that the test is complete   
 
 
